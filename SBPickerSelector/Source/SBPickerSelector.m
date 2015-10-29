@@ -367,7 +367,7 @@
 			if (self.delegate && [self.delegate respondsToSelector:@selector(pickerSelector:dateSelected:)]) {
 				[self.delegate pickerSelector:self dateSelected:[self.dateOnlyMonthYearPickerView date]];
 			}
-			[self dismissPicker];
+			//[self dismissPicker];
 			return;
 		}
 		
