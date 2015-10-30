@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "SBPickerSelector.h"
 
-@interface SBViewController : UIViewController <SBPickerSelectorDelegate>
+@interface SBViewController : UIViewController <SBPickerSelectorDelegate, SBDatePickerViewMonthYearDelegate>
 
 @end

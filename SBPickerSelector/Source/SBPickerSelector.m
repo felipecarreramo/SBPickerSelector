@@ -11,25 +11,12 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface SBDatePickerViewMonthYear : UIPickerView <UIPickerViewDelegate, UIPickerViewDataSource>
 
-@property (nonatomic, strong, readonly) NSDate *date;
-@property (nonatomic, strong) NSArray *months;
-@property (nonatomic, strong) NSArray *years;
 
-@property (nonatomic, assign) NSInteger minYear;
-@property (nonatomic, assign) NSInteger maxYear;
-@property (nonatomic, strong) NSIndexPath *todayIndexPath;
 
--(void)setupMinYear:(NSInteger)minYear maxYear:(NSInteger)maxYear;
--(void)selectToday;
--(NSArray *)nameOfYears;
--(NSIndexPath *)todayPath;
-
-@end
 
 @interface SBPickerSelector()
-@property (strong, nonatomic) SBDatePickerViewMonthYear *dateOnlyMonthYearPickerView;
+
 
 @end
 
@@ -246,6 +233,7 @@
 		frame = self.datePickerView.frame;
 		frame.origin.y = CGRectGetMaxY(self.optionsToolBar.frame);
 		self.datePickerView.frame = frame;
+        
 		
 	}else{
 		[self.datePickerView removeFromSuperview];
@@ -313,7 +301,7 @@
 	[self.datePickerView removeFromSuperview];
 	[self.pickerView removeFromSuperview];
 	[self.view addSubview:self.dateOnlyMonthYearPickerView];
-	
+    
 	CGRect frame = self.view.frame;
 	frame.size.height = CGRectGetHeight(self.optionsToolBar.frame) + CGRectGetHeight(self.pickerView.frame);
 	self.view.frame = frame;
@@ -323,9 +311,7 @@
 	frame.size.height = CGRectGetHeight(self.pickerView.frame);
 	self.dateOnlyMonthYearPickerView.frame = frame;
 	
-	
 }
-
 
 -(void)viewWillAppear:(BOOL)animated{
 	[super viewWillAppear:animated];
@@ -633,6 +619,20 @@ const NSInteger numberOfComponents = 2;
 	return 44;
 }
 
+-(void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    
+    if ( [self.pickerDelegate respondsToSelector:@selector(datePickerMonthAndYear:value:forUnitType:)]){
+        
+        int value = [self numberOfMonth:[self titleForRow:row forComponent:component]];
+        if (value == -1 ){
+            [self.pickerDelegate datePickerMonthAndYear:pickerView value:value forUnitType:SBPickerSelectorDateTypeUnitYear];
+        }else {
+            [self.pickerDelegate datePickerMonthAndYear:pickerView value:value forUnitType:SBPickerSelectorDateTypeUnitMonth];
+        }
+
+    }
+}
+
 #pragma mark - UIPickerViewDataSource
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -677,6 +677,19 @@ const NSInteger numberOfComponents = 2;
 	
 	return [self.years objectAtIndex:(row % yearCount)];
 }
+
+-(int)numberOfMonth:(NSString *) month
+{
+    NSArray *months = [self nameOfMonths];
+    for (int i = 0; i < months.count; i++) {
+        if (months[i] == month) {
+            return i+1;
+        }
+    }
+    
+    return -1;
+}
+
 
 -(UILabel *)labelForComponent:(NSInteger)component
 {
@@ -769,7 +782,6 @@ const NSInteger numberOfComponents = 2;
 	
 	self.delegate = self;
 	self.dataSource = self;
-	
 }
 
 @end

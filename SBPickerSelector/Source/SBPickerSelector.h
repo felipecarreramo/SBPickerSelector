@@ -8,6 +8,41 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, SBPickerSelectorDateTypeUnit) {
+    SBPickerSelectorDateTypeUnitMonth = 0,
+    SBPickerSelectorDateTypeUnitYear
+};
+
+
+@protocol SBDatePickerViewMonthYearDelegate <NSObject>
+
+@optional
+
+-(void) datePickerMonthAndYear:(UIPickerView *) picker value:(int) value  forUnitType:(SBPickerSelectorDateTypeUnit) typeUnit;
+
+@end
+
+@interface SBDatePickerViewMonthYear : UIPickerView <UIPickerViewDelegate, UIPickerViewDataSource>{
+    
+}
+@property (nonatomic, strong, readonly) NSDate *date;
+@property (nonatomic, strong) NSArray *months;
+@property (nonatomic, strong) NSArray *years;
+
+@property (nonatomic, assign) NSInteger minYear;
+@property (nonatomic, assign) NSInteger maxYear;
+@property (nonatomic, strong) NSIndexPath *todayIndexPath;
+
+@property (nonatomic, weak) id<SBDatePickerViewMonthYearDelegate> pickerDelegate;
+
+
+-(void)setupMinYear:(NSInteger)minYear maxYear:(NSInteger)maxYear;
+-(void)selectToday;
+-(NSArray *)nameOfYears;
+-(NSIndexPath *)todayPath;
+
+@end
+
 @class SBPickerSelector;
 
 typedef NS_ENUM(NSInteger, SBPickerSelectorType) {
@@ -22,7 +57,6 @@ typedef NS_ENUM(NSInteger, SBPickerSelectorDateType) {
 	SBPickerSelectorDateTypeOnlyHour,
 	SBPickerSelectorDateTypeOnlyMonthAndYear
 };
-
 
 @protocol SBPickerSelectorDelegate <NSObject>
 
@@ -65,10 +99,13 @@ typedef NS_ENUM(NSInteger, SBPickerSelectorDateType) {
 @property (nonatomic, strong) NSDate *defaultDate;
 @property (nonatomic, strong) NSString *doneButtonTitle;
 @property (nonatomic, strong) NSString *cancelButtonTitle;
-
+@property (strong, nonatomic) SBDatePickerViewMonthYear *dateOnlyMonthYearPickerView;
 	//for month and year selection (default, min:2008, max: 2030)
 @property (nonatomic, assign) int minYear;
 @property (nonatomic, assign) int maxYear;
+
+
+
 
 
 + (instancetype) picker;
@@ -77,5 +114,7 @@ typedef NS_ENUM(NSInteger, SBPickerSelectorDateType) {
 - (void) showPickerOver:(UIViewController *)parent;
 - (void) dismissPicker;
 
-
 @end
+
+
+

@@ -62,6 +62,7 @@
     
     picker.pickerType = SBPickerSelectorTypeDate; //select date(needs implements delegate method with date)
     picker.datePickerType = SBPickerSelectorDateTypeOnlyMonthAndYear;
+    picker.dateOnlyMonthYearPickerView.pickerDelegate = self;
 
 //    [picker showPickerOver:self];
     
@@ -71,6 +72,12 @@
     [picker showPickerIpadFromRect:frame inView:self.view];
     
     
+}
+
+-(void) datePickerMonthAndYear:(UIPickerView *)picker value:(int)value forUnitType:(SBPickerSelectorDateTypeUnit)typeUnit {
+    if (typeUnit == SBPickerSelectorDateTypeUnitMonth) {
+        NSLog(@"month %d", value);
+    }
 }
 
 
