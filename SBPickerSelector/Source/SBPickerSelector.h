@@ -8,17 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, SBPickerSelectorDateTypeUnit) {
-    SBPickerSelectorDateTypeUnitMonth = 0,
-    SBPickerSelectorDateTypeUnitYear
-};
-
-
 @protocol SBDatePickerViewMonthYearDelegate <NSObject>
 
 @optional
 
--(void) datePickerMonthAndYear:(UIPickerView *) picker value:(int) value  forUnitType:(SBPickerSelectorDateTypeUnit) typeUnit;
+-(void) datePickerMonthAndYearView:(UIPickerView *) picker didSelectMonth:(int) month  andYear:(int) year;
 
 @end
 

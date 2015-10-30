@@ -489,9 +489,16 @@
 
 @interface SBDatePickerViewMonthYear()
 
+
+
+
 @end
 
 @implementation SBDatePickerViewMonthYear
+{
+    int currentMonthInPicker;
+    int currentYearInPicker;
+}
 
 const NSInteger bigRowCount = 1000;
 const NSInteger numberOfComponents = 2;
@@ -621,14 +628,27 @@ const NSInteger numberOfComponents = 2;
 
 -(void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     
-    if ( [self.pickerDelegate respondsToSelector:@selector(datePickerMonthAndYear:value:forUnitType:)]){
+    if ( [self.pickerDelegate respondsToSelector:@selector(datePickerMonthAndYearView:didSelectMonth:andYear:)]){
         
-        int value = [self numberOfMonth:[self titleForRow:row forComponent:component]];
-        if (value == -1 ){
-            [self.pickerDelegate datePickerMonthAndYear:pickerView value:value forUnitType:SBPickerSelectorDateTypeUnitYear];
-        }else {
-            [self.pickerDelegate datePickerMonthAndYear:pickerView value:value forUnitType:SBPickerSelectorDateTypeUnitMonth];
+        if( component == MONTH ) {
+            currentMonthInPicker = [self numberOfMonth:[self titleForRow:row forComponent:component]];
         }
+        
+        if ( component == YEAR ) {
+            NSInteger yearCount = self.years.count;
+            NSString *yearName = [self.years objectAtIndex:(row % yearCount)];
+            currentYearInPicker = yearName.intValue;
+        }
+        
+        if ( currentYearInPicker == 0) {
+            currentYearInPicker = [self currentYearNumber];
+        }
+        
+        if ( currentMonthInPicker == 0) {
+            currentMonthInPicker = [self currentMonthNumber];
+        }
+        
+        [self.pickerDelegate datePickerMonthAndYearView:pickerView didSelectMonth:currentMonthInPicker andYear:currentYearInPicker];
 
     }
 }
@@ -753,6 +773,20 @@ const NSInteger numberOfComponents = 2;
 	
 	return [NSIndexPath indexPathForRow:row inSection:section];
 }
+
+-(int)currentMonthNumber
+{
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    [formatter setDateFormat:@"MM"];
+    return [formatter stringFromDate:[NSDate date]].intValue;
+}
+
+-(int)currentYearNumber
+{
+    return [self currentYearName].intValue;
+}
+
 
 -(NSString *)currentMonthName
 {

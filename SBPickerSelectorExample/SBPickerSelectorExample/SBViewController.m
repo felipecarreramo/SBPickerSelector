@@ -74,10 +74,8 @@
     
 }
 
--(void) datePickerMonthAndYear:(UIPickerView *)picker value:(int)value forUnitType:(SBPickerSelectorDateTypeUnit)typeUnit {
-    if (typeUnit == SBPickerSelectorDateTypeUnitMonth) {
-        NSLog(@"month %d", value);
-    }
+-(void) datePickerMonthAndYearView:(UIPickerView *)picker didSelectMonth:(int)month andYear:(int)year {
+    NSLog(@"month %d, year %d", month, year);
 }
 
 
